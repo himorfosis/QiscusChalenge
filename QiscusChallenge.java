@@ -19,7 +19,7 @@ in order to:
     10 : true
 */
 
-public class Main {
+public class QiscusChallenge {
     public static void main(String[] args) {
         // The following story is totally fiction. Any resemblances with real world character is (perhaps)
         // coincidence.
@@ -161,23 +161,23 @@ public class Main {
 
 class FictionBookLibrary {
     // PLACE YOUR CODE HERE
-    private java.util.List<Book> bookList;
-    private java.util.List<Member> memberList;
+    private java.util.List<Book> bookList = new BookArrayList();
+    private java.util.List<Member> memberList = new java.util.ArrayList();
 
     public void addCollection(Book book, Integer stock) {
 
-        book.setStock(book.getstock() + stock);
-        this.getBookList().add(book);
+        book.setStock(stock);
+        bookList.add(book);
 
     }
 
     public java.util.List<Book> listBooksAuthoredBy(String authored) {
 
-        java.util.List<Book> listData = new java.util.ArrayList<>();
-
-        for(int i = 0; i < this.getBookList().size(); i++) {
-            Book item = this.getBookList().get(i);
-            if (item.getTitle().equals(authored)) {
+        java.util.List<Book> listData = new java.util.ArrayList();
+        
+        for(int i = 0; i < bookList.size(); i++) {
+            Book item = bookList.get(i);
+            if (item.getAuthored().equals(authored)) {
                 listData.add(item);
             }
         }
@@ -186,6 +186,7 @@ class FictionBookLibrary {
     }
 
     public Member createMember(String name) {
+
         Member member = new Member();
         member.setName(name);
 
@@ -215,6 +216,17 @@ class FictionBookLibrary {
     public java.util.List<Member> getMemberList() {
         return memberList;
     }
+
+    private class BookArrayList extends java.util.ArrayList {
+        @Override
+        public boolean contains(Object object){
+            
+            Book book = (Book) object;
+            java.util.List<Book> list = this.subList(0, this.size()-1);
+            return list.stream().anyMatch((data) -> (data.getAuthored().equals(book.getAuthored()) && data.getTitle().equals(book.getTitle())));
+        }
+    }
+
 }
 
 class Book {
@@ -226,7 +238,6 @@ class Book {
     public Book(String title, String authored) {
         this.title = title;
         this.authored = authored;
-        this.stock = 1;
     }
 
     public void setTitle(String title) {
